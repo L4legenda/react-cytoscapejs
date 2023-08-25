@@ -81,7 +81,9 @@ export default class CytoscapeComponent extends React.Component {
     const cy = this._cy;
     const { diff, toJson, get, forEach } = newProps;
 
-    patch(cy, prevProps, newProps, diff, toJson, get, forEach);
+    const { layoutCyto } = patch(cy, prevProps, newProps, diff, toJson, get, forEach);
+
+    this.layoutCyto = layoutCyto;
 
     if (newProps.cy != null) {
       newProps.cy(cy);
@@ -94,6 +96,7 @@ export default class CytoscapeComponent extends React.Component {
 
   componentWillUnmount() {
     this._cy.destroy();
+    this.layoutCyto?.stop && this.layoutCyto.stop()
   }
 
   render() {

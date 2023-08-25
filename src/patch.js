@@ -2,6 +2,7 @@ import { get as atKey } from './json';
 import { shallowObjDiff } from './diff';
 
 let layoutCyto = null;
+let oldLayoutOpts = null;
 
 const isDiffAtKey = (json1, json2, diff, key) =>
   diff(atKey(json1, key), atKey(json2, key));
@@ -59,6 +60,10 @@ export const patch = (cy, json1, json2, diff, toJson, get, forEach) => {
   if (isDiffAtKey(json1, json2, diff, 'layout')) {
     patchLayout(cy, atKey(json1, 'layout'), atKey(json2, 'layout'), toJson);
   }
+
+  return {
+    layoutCyto
+  }
 };
 
 const patchJson = (cy, key, val1, val2, toJson) => {
@@ -69,6 +74,10 @@ const patchLayout = (cy, layout1, layout2, toJson) => {
   const layoutOpts = toJson(layout2);
 
   if (layoutOpts != null) {
+    if (layoutCyto && oldLayoutOpts?.name !== layoutOpts?.name) {
+      layoutCyto?.stop && layoutCyto.stop();
+    }
+    oldLayoutOpts = layoutOpts;
     layoutCyto = cy.layout(layoutOpts)
     layoutCyto.run();
   }
