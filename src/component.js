@@ -74,7 +74,8 @@ export default class CytoscapeComponent extends React.Component {
       window[global] = cy;
     }
 
-    this.updateCytoscape(null, this.props);
+    const { layoutCyto } = this.updateCytoscape(null, this.props);
+    this.layoutCyto = layoutCyto;
   }
 
   updateCytoscape(prevProps, newProps) {
